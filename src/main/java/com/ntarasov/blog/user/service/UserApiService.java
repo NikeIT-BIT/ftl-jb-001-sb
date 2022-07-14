@@ -8,8 +8,12 @@ import com.ntarasov.blog.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -35,7 +39,23 @@ public class UserApiService {
     public Optional<UserDoc> findById(ObjectId id){
         return userRepository.findById(id);
     }
-    public List<UserDoc> search(){
-        return  userRepository.findAll();
+    public List<UserDoc> search(
+            String queryString,
+            Integer size,
+            Long skip
+    ){
+        Criteria criteria = new Criteria();
+        if(queryString!= null && queryString != ""){
+            criteria = criteria.orOperator(
+                    Criteria.where("firstName").regex(queryString,"i"),
+                    Criteria.where("lastName").regex(queryString,"i"),
+                    Criteria.where("email").regex(queryString,"i")
+            );
+        }
+
+        Query query = new Query(criteria);
+        query.limit(size);
+        query.skip(skip);
+        return  mongoTemplate.find(query, UserDoc.class);
     }
 }
