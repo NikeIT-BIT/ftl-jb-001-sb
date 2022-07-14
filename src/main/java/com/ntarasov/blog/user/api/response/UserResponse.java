@@ -1,15 +1,15 @@
 package com.ntarasov.blog.user.api.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+
 import lombok.Getter;
 import lombok.Setter;
-import org.bson.types.ObjectId;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 
 public class UserResponse {
     protected String id;

@@ -5,7 +5,6 @@ import com.ntarasov.blog.user.model.Company;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.bson.types.ObjectId;
 
 @Getter
 @Setter
@@ -14,6 +13,4 @@ import org.bson.types.ObjectId;
 public class UserFullResponse extends UserResponse{
     private Address address;
     private Company company;
-
-
 }
