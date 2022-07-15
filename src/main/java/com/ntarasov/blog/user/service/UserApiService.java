@@ -2,7 +2,9 @@ package com.ntarasov.blog.user.service;
 
 
 import com.ntarasov.blog.user.api.request.RegistrationRequest;
+import com.ntarasov.blog.user.api.request.UpdateUserRequest;
 import com.ntarasov.blog.user.exception.UserExistException;
+import com.ntarasov.blog.user.exception.UserNotExistException;
 import com.ntarasov.blog.user.model.UserDoc;
 import com.ntarasov.blog.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -57,5 +59,17 @@ public class UserApiService {
         query.limit(size);
         query.skip(skip);
         return  mongoTemplate.find(query, UserDoc.class);
+    }
+
+    public UserDoc update(UpdateUserRequest request) throws UserNotExistException {
+        Optional<UserDoc> userDocOptional = userRepository.findById(request.getId());
+        if (userDocOptional.isEmpty()) throw new UserNotExistException();
+        UserDoc userDoc = userDocOptional.get();
+        userDoc.setLastName(request.getLastName());
+        userDoc.setFirstName(request.getFirstName());
+        userDoc.setAddress(request.getAddress());
+        userDoc.setCompany(request.getCompany());
+        userRepository.save(userDoc);
+        return userDoc;
     }
 }
