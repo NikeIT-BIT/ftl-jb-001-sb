@@ -1,5 +1,6 @@
 package com.ntarasov.blog.user.mapping;
 
+import com.ntarasov.blog.base.api.response.SearchResponse;
 import com.ntarasov.blog.base.mapping.BaseMapping;
 import com.ntarasov.blog.user.api.response.UserFullResponse;
 import com.ntarasov.blog.user.api.response.UserResponse;
@@ -52,16 +53,19 @@ public class UserMapping {
         }
     }
 
-    public static class SearchMapping extends BaseMapping<List<UserDoc>, List<UserResponse>>{
+    public static class SearchMapping extends BaseMapping<SearchResponse<UserDoc>, SearchResponse<UserResponse>>{
         private final ResponseMapping responseMapping = new ResponseMapping();
 
         @Override
-        public List<UserResponse> convert(List<UserDoc> userDocs) {
-            return userDocs.stream().map(responseMapping::convert).collect(Collectors.toList());
+        public SearchResponse<UserResponse> convert(SearchResponse<UserDoc> searchResponse) {
+            return SearchResponse.of(
+                    searchResponse.getList().stream().map(responseMapping::convert).collect(Collectors.toList()),
+                    searchResponse.getCount()
+            );
         }
 
         @Override
-        public List<UserDoc> unMapping(List<UserResponse> userResponses) {
+        public SearchResponse<UserDoc> unMapping(SearchResponse<UserResponse> userResponses) {
             throw new RuntimeException("dont use this");
         }
     }

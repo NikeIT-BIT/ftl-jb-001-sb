@@ -1,5 +1,8 @@
 package com.ntarasov.blog.user.controller;
 
+import com.ntarasov.blog.base.api.reqest.SearchRequest;
+import com.ntarasov.blog.base.api.response.OkResponse;
+import com.ntarasov.blog.base.api.response.SearchResponse;
 import com.ntarasov.blog.user.api.request.RegistrationRequest;
 import com.ntarasov.blog.user.api.request.UpdateUserRequest;
 import com.ntarasov.blog.user.api.response.UserFullResponse;
@@ -25,42 +28,41 @@ public class UserApiController {
     private final UserApiService userApiService;
 
     @PostMapping(UserApiRoutes.ROOT)
-    public UserFullResponse registration(@RequestBody RegistrationRequest request) throws UserExistException {
-        return UserMapping.getInstance().getResponseFull().convert(userApiService.registration(request));
+    public OkResponse<UserFullResponse> registration(@RequestBody RegistrationRequest request) throws UserExistException {
+        return OkResponse.of(UserMapping.getInstance().getResponseFull().convert(userApiService.registration(request)));
     }
     @GetMapping(UserApiRoutes.BY_ID)
-   public UserFullResponse byId(@PathVariable ObjectId id) throws ChangeSetPersister.NotFoundException {
-        return UserMapping.getInstance().getResponseFull().convert(
+   public OkResponse<UserFullResponse> byId(@PathVariable ObjectId id) throws ChangeSetPersister.NotFoundException {
+        return OkResponse.of(UserMapping.getInstance().getResponseFull().convert(
                 userApiService.findById(id).orElseThrow(
                         ChangeSetPersister.NotFoundException::new)
-        );
+        ));
    }
 
    @GetMapping(UserApiRoutes.ROOT)
-    public List<UserResponse> search(
-            @RequestParam (required = false) String query,
-            @RequestParam (required = false, defaultValue = "1") Integer size,
-            @RequestParam (required = false, defaultValue = "0") Long skip
-   ){
-        return UserMapping.getInstance().getSearch().convert(
-                userApiService.search(query, size, skip)
-        );
+    public OkResponse<SearchResponse<UserResponse>> search(
+           @ModelAttribute SearchRequest request
+
+           ){
+        return OkResponse.of(UserMapping.getInstance().getSearch().convert(
+                userApiService.search(request)
+        ));
 
    }
    @PutMapping(UserApiRoutes.BY_ID)
-    public UserFullResponse updateUser(
+    public OkResponse<UserFullResponse> updateUser(
             @PathVariable String id,
             @RequestBody UpdateUserRequest updateUserRequest
    ) throws UserNotExistException {
-        return UserMapping.getInstance().getResponseFull().convert(
+        return OkResponse.of(UserMapping.getInstance().getResponseFull().convert(
                 userApiService.update(updateUserRequest)
-        );
+        ));
 
    }
    @DeleteMapping(UserApiRoutes.BY_ID)
-    public String deleteUser(@PathVariable ObjectId id){
+    public OkResponse<String> deleteUser(@PathVariable ObjectId id){
         userApiService.delete(id);
-        return HttpStatus.OK.toString();
+        return OkResponse.of(HttpStatus.OK.toString());
 
    }
 }
