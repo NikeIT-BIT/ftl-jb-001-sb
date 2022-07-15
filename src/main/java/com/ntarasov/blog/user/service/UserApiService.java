@@ -1,6 +1,8 @@
 package com.ntarasov.blog.user.service;
 
 
+import com.ntarasov.blog.base.api.reqest.SearchRequest;
+import com.ntarasov.blog.base.api.response.SearchResponse;
 import com.ntarasov.blog.user.api.request.RegistrationRequest;
 import com.ntarasov.blog.user.api.request.UpdateUserRequest;
 import com.ntarasov.blog.user.exception.UserExistException;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -41,24 +44,22 @@ public class UserApiService {
     public Optional<UserDoc> findById(ObjectId id){
         return userRepository.findById(id);
     }
-    public List<UserDoc> search(
-            String queryString,
-            Integer size,
-            Long skip
-    ){
+    public SearchResponse<UserDoc> search(SearchRequest request){
         Criteria criteria = new Criteria();
-        if(queryString!= null && queryString != ""){
+        if(request.getQuery()!= null && !Objects.equals(request.getQuery(), "")){
             criteria = criteria.orOperator(
-                    Criteria.where("firstName").regex(queryString,"i"),
-                    Criteria.where("lastName").regex(queryString,"i"),
-                    Criteria.where("email").regex(queryString,"i")
+                    Criteria.where("firstName").regex(request.getQuery(),"i"),
+                    Criteria.where("lastName").regex(request.getQuery(),"i"),
+                    Criteria.where("email").regex(request.getQuery(),"i")
             );
         }
 
         Query query = new Query(criteria);
-        query.limit(size);
-        query.skip(skip);
-        return  mongoTemplate.find(query, UserDoc.class);
+        Long count = mongoTemplate.count(query, UserDoc.class);
+        query.limit(request.getSize());
+        query.skip(request.getSkip());
+        List<UserDoc> userDocs = mongoTemplate.find(query, UserDoc.class);
+        return  SearchResponse.of(userDocs, count);
     }
 
     public UserDoc update(UpdateUserRequest request) throws UserNotExistException {
