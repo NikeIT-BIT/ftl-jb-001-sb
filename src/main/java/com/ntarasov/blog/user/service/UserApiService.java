@@ -72,4 +72,7 @@ public class UserApiService {
         userRepository.save(userDoc);
         return userDoc;
     }
+    public void delete(ObjectId id){
+        userRepository.deleteById(id);
+    }
 }
