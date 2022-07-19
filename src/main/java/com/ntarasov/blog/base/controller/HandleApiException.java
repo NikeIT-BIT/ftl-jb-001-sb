@@ -3,7 +3,6 @@ package com.ntarasov.blog.base.controller;
 import com.ntarasov.blog.base.api.response.ErrorResponse;
 import com.ntarasov.blog.user.exception.UserExistException;
 import com.ntarasov.blog.user.exception.UserNotExistException;
-import org.apache.catalina.User;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
