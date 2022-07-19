@@ -2,17 +2,36 @@ package com.ntarasov.blog.user.mapping;
 
 import com.ntarasov.blog.base.api.response.SearchResponse;
 import com.ntarasov.blog.base.mapping.BaseMapping;
+import com.ntarasov.blog.user.api.request.UpdateUserRequest;
 import com.ntarasov.blog.user.api.response.UserFullResponse;
 import com.ntarasov.blog.user.api.response.UserResponse;
 import com.ntarasov.blog.user.model.UserDoc;
 import lombok.Getter;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
 
 public class UserMapping {
+    public static class RequestMapping extends BaseMapping<UpdateUserRequest, UserDoc> {
+
+        @Override
+        public UserDoc convert(UpdateUserRequest updateUserRequest) {
+            return UserDoc.builder()
+                    .id(updateUserRequest.getId())
+                    .firstName(updateUserRequest.getFirstName())
+                    .lastName(updateUserRequest.getLastName())
+                    .email(updateUserRequest.getEmail())
+                    .build();
+        }
+
+
+        @Override
+        public UpdateUserRequest unMapping(UserDoc userDoc) {
+            throw new RuntimeException("dont use this");
+        }
+    }
+
     public static class ResponseMapping extends BaseMapping<UserDoc, UserResponse> {
 
         @Override
@@ -70,6 +89,7 @@ public class UserMapping {
         }
     }
 
+    private final RequestMapping request = new RequestMapping();
     private final ResponseMapping response = new ResponseMapping();
     private final ResponseFullMapping responseFull = new ResponseFullMapping();
     private final SearchMapping search = new SearchMapping();

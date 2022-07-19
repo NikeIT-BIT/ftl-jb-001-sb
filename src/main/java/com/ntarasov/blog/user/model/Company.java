@@ -1,5 +1,6 @@
 package com.ntarasov.blog.user.model;
 
+import io.swagger.annotations.ApiModel;
 import lombok.*;
 
 @Getter
@@ -7,6 +8,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(value = "Company", description = "Model company")
 
 public class Company {
     private String name;

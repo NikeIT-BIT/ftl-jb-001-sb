@@ -1,5 +1,6 @@
 package com.ntarasov.blog.user.api.response;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 
 import lombok.Getter;
@@ -10,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @AllArgsConstructor
 @SuperBuilder
+@ApiModel(value = "UserResponse", description = "Model userResponse")
 
 public class UserResponse {
     protected String id;

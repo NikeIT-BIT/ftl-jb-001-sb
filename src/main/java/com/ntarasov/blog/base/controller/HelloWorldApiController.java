@@ -1,8 +1,8 @@
 package com.ntarasov.blog.base.controller;
 
 import com.ntarasov.blog.base.api.reqest.PostRequest;
-import com.ntarasov.blog.base.api.response.IndexResponse;
 import com.ntarasov.blog.base.routers.ExampleRouters;
+import com.ntarasov.blog.base.api.response.IndexResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
