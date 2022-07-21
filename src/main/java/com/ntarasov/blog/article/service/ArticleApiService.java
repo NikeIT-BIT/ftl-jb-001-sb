@@ -65,8 +65,12 @@ public class ArticleApiService {
     public ArticleDoc update(ArticleRequest request) throws ArticleNotExistException {
         Optional<ArticleDoc> articleDocOptional = articleRepository.findById(request.getId());
         if (articleDocOptional.isEmpty()) throw new ArticleNotExistException();
+
+        ArticleDoc oldDoc = articleDocOptional.get();
         ArticleDoc articleDoc = ArticleMapping.getInstance().getRequest().convert(request);
+
         articleDoc.setId(request.getId());
+        articleDoc.setOwnerld(oldDoc.getOwnerld());
         articleRepository.save(articleDoc);
         return articleDoc;
     }
