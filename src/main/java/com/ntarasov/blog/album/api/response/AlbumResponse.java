@@ -1,4 +1,4 @@
-package com.ntarasov.blog.file.api.response;
+package com.ntarasov.blog.album.api.response;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -10,11 +10,10 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @AllArgsConstructor
 @SuperBuilder
-@ApiModel(value = "FileResponse", description = "Model fileResponse")
+@ApiModel(value = "AlbumResponse", description = "Model albumResponse")
 
-public class FileResponse {
+public class AlbumResponse {
         protected String id;
         protected String  title;
         protected String ownerId;
-        protected String contentType;
 }

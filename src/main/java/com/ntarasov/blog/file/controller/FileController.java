@@ -7,6 +7,7 @@ import com.ntarasov.blog.file.api.response.FileResponse;
 import com.ntarasov.blog.file.exception.FileExistException;
 import com.ntarasov.blog.file.exception.FileNotExistException;
 import com.ntarasov.blog.file.mapping.FileMapping;
+import com.ntarasov.blog.file.model.FileDoc;
 import com.ntarasov.blog.file.routers.FileApiRoutes;
 import com.ntarasov.blog.file.service.FileApiService;
 import com.ntarasov.blog.user.exception.UserNotExistException;
@@ -38,9 +39,14 @@ public class FileController {
     public  void byId(
     @ApiParam(value = "File id") @PathVariable ObjectId id, HttpServletResponse response
             ) throws ChangeSetPersister.NotFoundException, IOException {
+        FileDoc fileDoc = fileApiService.findById(id).orElseThrow();
+
+
+        response.addHeader("Content-Type", fileDoc.getContentType());
+        response.addHeader("Content-Disposition", "attachment; filename=\""+fileDoc.getTitle()+"\"");
         FileCopyUtils.copy(fileApiService.downloadById(id),response.getOutputStream());
 
-            }
+    }
 
 //<---------------------------------СОЗДАНАНИЕ------------------------------------------------->
     @PostMapping(FileApiRoutes.ROOT)

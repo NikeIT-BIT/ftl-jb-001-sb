@@ -1,4 +1,4 @@
-package com.ntarasov.blog.file.model;
+package com.ntarasov.blog.album.model;
 
 import lombok.*;
 import org.bson.types.ObjectId;
@@ -13,10 +13,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Builder
 
-public class FileDoc {
+public class AlbumDoc {
     @Id
         private ObjectId id;
         private String  title;
         private ObjectId ownerId;
-        private String contentType;
 }

@@ -1,11 +1,14 @@
 package com.ntarasov.blog.base.api.reqest;
 
 import io.swagger.annotations.ApiParam;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 
 public class SearchRequest {
     @ApiParam(name = "query", value = "Search by fields", required = false)
