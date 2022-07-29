@@ -72,6 +72,7 @@ public class FileApiService {
                 .id(id)
                 .title(multipartFile.getOriginalFilename())
                 .ownerId(ownerId)
+                .contentType(multipartFile.getContentType())
                 .build();
 
         fileRepository.save(fileDoc);

@@ -8,6 +8,10 @@ import com.ntarasov.blog.album.exception.AlbumExistException;
 import com.ntarasov.blog.album.exception.AlbumNotExistException;
 import com.ntarasov.blog.album.model.AlbumDoc;
 import com.ntarasov.blog.album.repository.AlbumRepository;
+import com.ntarasov.blog.photo.api.request.PhotoSearchRequest;
+import com.ntarasov.blog.photo.model.PhotoDoc;
+import com.ntarasov.blog.photo.repository.PhotoRepository;
+import com.ntarasov.blog.photo.service.PhotoApiService;
 import com.ntarasov.blog.user.exception.UserNotExistException;
 import com.ntarasov.blog.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +33,7 @@ public class AlbumApiService {
     private final AlbumRepository albumRepository;
     private final MongoTemplate mongoTemplate;
     private final UserRepository userRepository;
+    private final PhotoApiService photoApiService;
 
 //<---------------------------------ПОИСК ПО ID------------------------------------------------->
     public Optional<AlbumDoc> findById(ObjectId id){
@@ -80,6 +85,12 @@ public class AlbumApiService {
 
 //<---------------------------------УДАЛЕНИЕ------------------------------------------------->
     public void delete(ObjectId id){
+        List<PhotoDoc> photoDocs = photoApiService.search(PhotoSearchRequest.builder()
+                .albumId(id)
+                .size(1000)
+                .build()).getList();
+
+        for(PhotoDoc photoDoc : photoDocs) photoApiService.delete(photoDoc.getId());
         albumRepository.deleteById(id);
     }
 }
