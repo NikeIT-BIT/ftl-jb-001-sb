@@ -1,5 +1,7 @@
 package com.ntarasov.blog.base.controller;
 
+import com.ntarasov.blog.auth.exceptions.AuthException;
+import com.ntarasov.blog.auth.exceptions.NotAccessException;
 import com.ntarasov.blog.base.api.response.ErrorResponse;
 import com.ntarasov.blog.user.exception.UserExistException;
 import com.ntarasov.blog.user.exception.UserNotExistException;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import javax.naming.AuthenticationNotSupportedException;
 
 @ControllerAdvice
 
@@ -37,6 +41,16 @@ public class HandleApiException extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UserExistException.class)
     public ResponseEntity<Object> userExistException(UserExistException ex, WebRequest webRequest) {
         return buildResponseEntity(ErrorResponse.of("UserExistException", HttpStatus.BAD_REQUEST));
+    }
+
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<Object> authException(AuthException ex, WebRequest webRequest) {
+        return buildResponseEntity(ErrorResponse.of("AuthException", HttpStatus.UNAUTHORIZED));
+    }
+
+    @ExceptionHandler(NotAccessException.class)
+    public ResponseEntity<Object> notAccessException(NotAccessException ex, WebRequest webRequest) {
+        return buildResponseEntity(ErrorResponse.of("NotAccessException", HttpStatus.FORBIDDEN));
     }
 
     @ExceptionHandler(Exception.class)
